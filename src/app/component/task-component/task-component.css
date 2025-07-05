@@ -7,3 +7,80 @@
     margin-top: 12px;
     width: 100%;
 }
+
+.todo-item {
+    border: 1px solid #ddd;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    min-height: 95px;
+}
+
+.task-container {
+    display: flex;
+    gap: 30px;
+    padding: 40px 60px;
+    margin: 50px auto;
+    max-width: 1200px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-section,
+.list-section {
+    flex: 1;
+}
+
+.task-card {
+    padding: 24px;
+    background-color: #ffffff;
+}
+
+.title-primary {
+    color: #3f51b5;
+}
+
+.title-secondary {
+    color: #009688;
+}
+
+.full-width {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.submit-btn {
+    margin-top: 12px;
+}
+
+.divider {
+    width: 2px;
+    background-color: #e0e0e0;
+}
+
+.todo-item {
+    border: 1px solid #ddd;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    min-height: 120px;
+}
+
+.todo-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.task-title {
+    font-size: 18px;
+}
+
+.task-description,
+.task-date {
+    color: #666;
+}

@@ -1,58 +1,62 @@
-<div
-    style="display: flex; gap: 30px; padding: 40px 60px; margin: 50px auto; max-width: 1200px; background: #f9f9f9; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
-    <!-- Left Panel: Task Form -->
-    <div style="flex: 1;">
-        <mat-card style="padding: 24px; background-color: #ffffff;">
-            <mat-card-title>
-                <h2 style="color: #3f51b5;">Create a Task</h2>
-            </mat-card-title>
-            <form [formGroup]="taskForm" (ngSubmit)="createTask()">
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Title</mat-label>
-                    <input matInput formControlName="title" placeholder="   Enter task title" />
-                </mat-form-field>
+<div class="task-container">
+  <div class="form-section">
+    <mat-card class="task-card">
+      <mat-card-title>
+        <h2 class="title-primary">Create a Task</h2>
+      </mat-card-title>
+      <form [formGroup]="taskForm" (ngSubmit)="createTask()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter task title" />
+          <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+            Title is required
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Description</mat-label>
-                    <textarea matInput formControlName="description" rows="3"
-                        placeholder="   Enter task description"></textarea>
-                </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3" placeholder="Enter task description"></textarea>
+          <mat-error *ngIf="taskForm.get('description')?.hasError('required')">
+            Description is required
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Due Date</mat-label>
-                    <input matInput type="date" formControlName="dueDate" />
-                </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Due Date</mat-label>
+          <input matInput type="date" formControlName="dueDate" />
+          <mat-error *ngIf="taskForm.get('dueDate')?.hasError('required')">
+            Due date is required
+          </mat-error>
+        </mat-form-field>
 
-                <button mat-raised-button color="primary" type="submit" class="submit-btn">
-                    ➕ Add Task
-                </button>
-            </form>
-        </mat-card>
-    </div>
+        <button mat-raised-button color="primary" type="submit" class="submit-btn">
+          ➕ Add Task
+        </button>
+      </form>
+    </mat-card>
+  </div>
 
-    <!-- Vertical Separator -->
-    <div style="width: 2px; background-color: #e0e0e0;"></div>
+  <div class="divider"></div>
 
-    <!-- Right Panel: To-Do List -->
-    <div style="flex: 1;">
-        <mat-card style="padding: 24px; background-color: #ffffff;">
-            <mat-card-title>
-                <h2 style="color: #009688;">Pending Tasks</h2>
-            </mat-card-title>
-            <mat-list>
-                <mat-list-item *ngFor="let task of pendingTasks"
-                    style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                    <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-                        <div>
-                            <strong style="font-size: 16px;">{{ task.title }}</strong><br />
-                            <span style="color: #666;">{{ task.description }}</span><br />
-                        </div>
-                        <button mat-flat-button color="accent" (click)="completeTask(task.id)">
-                            Complete
-                        </button>
-                    </div>
-                </mat-list-item>
-            </mat-list>
-        </mat-card>
-    </div>
+  <div class="list-section">
+    <mat-card class="task-card">
+      <mat-card-title>
+        <h2 class="title-secondary">Pending Tasks</h2>
+      </mat-card-title>
+      <mat-list>
+        <mat-list-item *ngFor="let task of pendingTasks" class="todo-item">
+          <div class="todo-content">
+            <div>
+              <strong class="task-title">{{ task.title }}</strong><br />
+              <span class="task-description">{{ task.description }}</span><br />
+              <span class="task-date">Due: {{ task.dueDate }}</span>
+            </div>
+            <button mat-flat-button color="accent" (click)="completeTask(task.id)">
+              Complete
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card>
+  </div>
 </div>

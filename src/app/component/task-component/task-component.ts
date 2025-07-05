@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonResponse } from '../../model/CommonResponse';
@@ -18,24 +18,21 @@ import { MatListModule } from '@angular/material/list';
   selector: 'app-task-component',
   imports: [
     ReactiveFormsModule, CommonModule, HttpClientModule, ToastrModule, MatFormFieldModule,
-    MatInputModule, MatButtonModule, MatCardModule, MatListModule],
+    MatInputModule, MatButtonModule, MatCardModule, MatListModule,
+  ],
   providers: [TaskService],
   templateUrl: './task-component.html',
   styleUrl: './task-component.css'
 })
 export class TaskComponent implements OnInit {
   taskForm!: FormGroup;
-  pendingTasks: Task[] = [
-    { id: 0, title: 'Sample Task 1', description: 'This is a sample task1', completed: false },
-    { id: 1, title: 'Sample Task 2', description: 'This is a sample task2', completed: false },
-    { id: 3, title: 'Sample Task 3', description: 'This is another sample task', completed: false },
-    { id: 4, title: 'Sample Task 4', description: 'This is another sample task', completed: false }
-  ];
+  pendingTasks: Task[] = [];
 
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -46,7 +43,7 @@ export class TaskComponent implements OnInit {
   private initForm(): void {
     this.taskForm = this.fb.group({
       title: ['', Validators.required],
-      description: [''],
+      description: ['', Validators.required],
       dueDate: ['', Validators.required],
     });
   }
@@ -58,12 +55,18 @@ export class TaskComponent implements OnInit {
     }
 
     const taskRequest: TaskRequestDTO = this.taskForm.value;
-
     this.taskService.createTask(taskRequest).subscribe({
       next: (response: CommonResponse) => {
-        this.toastr.success(response.message, 'Success');
-        this.taskForm.reset();
-        this.fetchPendingTasks();
+        if (response && response.status === 'OK') {
+          this.toastr.success(response.message, 'Success');
+          this.taskForm.reset();
+          this.fetchPendingTasks();
+          this.cdr.detectChanges();
+          return;
+        } else {
+          this.toastr.info(response.message, 'Info');
+          return;
+        }
       },
       error: () => {
         this.toastr.error('Failed to create task', 'Error');
@@ -74,12 +77,15 @@ export class TaskComponent implements OnInit {
   fetchPendingTasks(): void {
     this.taskService.getAllPendingTodos().subscribe({
       next: (response: CommonResponse) => {
-        this.pendingTasks = Array.isArray(response.data) ? response.data : [];
-        if (this.pendingTasks.length === 0) {
-          this.toastr.info('No pending tasks found', 'Info');
+        if (response && response.data) {
+          this.pendingTasks = Array.isArray(response.data) ? response.data : [];
+          this.cdr.detectChanges();
+          return;
         } else {
-          this.toastr.success(response.message, 'Loaded');
+          this.toastr.info(response.message, 'Info');
+          return;
         }
+
       },
       error: () => {
         this.toastr.error('Failed to fetch pending tasks', 'Error');
@@ -90,8 +96,15 @@ export class TaskComponent implements OnInit {
   completeTask(taskId: number): void {
     this.taskService.makeToDoCompleted(taskId).subscribe({
       next: (response: CommonResponse) => {
-        this.toastr.success(response.message, 'Success');
-        this.fetchPendingTasks();
+        if (response && response.status === 'OK') {
+          this.toastr.success(response.message, 'Success');
+          this.fetchPendingTasks();
+          this.cdr.detectChanges();
+          return;
+        } else {
+          this.toastr.info(response.message, 'Info');
+          return;
+        }
       },
       error: () => {
         this.toastr.error('Failed to mark task as completed', 'Error');

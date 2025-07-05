@@ -38,7 +38,7 @@ export class TaskService {
 
   makeToDoCompleted(id: number): Observable<CommonResponse> {
     const params = new HttpParams().set('id', id);
-    return this.http.post<CommonResponse>(`${this.taskBaseUrl}/make-todo-completed`, { params })
+    return this.http.post<CommonResponse>(`${this.taskBaseUrl}/make-todo-completed`, null, { params })
       .pipe(
         catchError(error => {
           return throwError(() => error);

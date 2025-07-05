@@ -11,7 +11,13 @@ bootstrapApplication(App, {
     ...(appConfig.providers || []),
     importProvidersFrom(
       BrowserAnimationsModule,
-      ToastrModule.forRoot()
+      ToastrModule.forRoot({
+        positionClass: 'toast-top-right',  
+        timeOut: 3000,                   
+        // progressBar: true,                
+        preventDuplicates: true,          
+        closeButton: true                 
+      })
     )
   ]
 }).catch((err) => console.error(err));
