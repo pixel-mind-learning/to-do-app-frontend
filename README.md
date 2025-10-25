@@ -1,59 +1,88 @@
-# CoverageX-To-Do-App
+# 🧩 CoverageX To-Do App – Dockerized Deployment Guide
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+This repository provides a simple way to deploy and run the full-stack **CoverageX To-Do App** using **Docker Compose**.  
+It automatically sets up the **frontend**, **backend**, and **database** containers.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Tech Stack
 
-```bash
-ng serve
-```
+- **Frontend:** React (`maleeshasa/to-do-app-frontend:v1`)  
+- **Backend:** Spring Boot (`maleeshasa/to-do-app-backend:v1`)  
+- **Database:** PostgreSQL (`bitnamilegacy/postgresql:17.5.0`)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## ✅ Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Before starting, make sure you have the following installed:
 
-```bash
-ng generate component component-name
-```
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- Docker Compose (included with Docker Desktop)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## ⚙️ Setup Instructions
 
-## Building
+### 1️⃣ Clone the Deployment Repository
 
-To build the project run:
+Clone the GitHub repository that contains the `docker-compose.yml` file:
 
 ```bash
-ng build
+git clone https://github.com/pixel-mind-learning/to-do-app-readme-files.git
+cd to-do-app-readme-files
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+### 2️⃣ Start the Application Stack
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Run the following command to start all services in detached mode:
 
 ```bash
-ng test
+docker compose up -d
 ```
 
-## Running end-to-end tests
+This will **pull**, **create**, and **run** the following containers automatically:
 
-For end-to-end (e2e) testing, run:
+- `maleeshasa/to-do-app-frontend:v1`
+- `maleeshasa/to-do-app-backend:v1`
+- `bitnamilegacy/postgresql:17.5.0`
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 3️⃣ Restore the Database Dump
 
-## Additional Resources
+Once all containers are up and running, restore the PostgreSQL database using the provided `dump.sql` file in to-do-app-readme-files folder.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Copy the dump file into the PostgreSQL container:
+
+   ```bash
+   docker cp "<your-dump-location>/dump.sql" mypostgresqldb:/dump.dump
+   ```
+
+2. Restore the dump inside the container:
+
+   ```bash
+   docker exec -it mypostgresqldb pg_restore -U postgres -d coveragex_todo_management /dump.dump
+   ```
+
+> 💡 **Tip:**  
+> - Replace `<your-dump-location>` with the actual local path to your dump file.  
+> - Ensure the container name `mypostgresqldb` matches the name used in the `docker-compose.yml` file.  
+> - Repository containing the dump:  
+>   [https://github.com/pixel-mind-learning/to-do-app-readme-files.git](https://github.com/pixel-mind-learning/to-do-app-readme-files.git)
+
+---
+
+## 🌐 Access the Application
+
+| Service | URL |
+|----------|------|
+| 🖥️ Frontend (React UI) | [http://localhost:8080](http://localhost:8080) |
+| ⚙️ Backend (Spring Boot API) | [http://localhost:8082/api/tasks](http://localhost:8082/api/tasks) |
+
+
+---
+
+Made with ❤️ by **Maleesha Sandakalum**
